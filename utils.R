@@ -4,12 +4,20 @@ pick_glmnet_var <- function(x, y,
 	alpha = 1,
 	cv_cutoff = 0.5){
 
-	model <- glmnet::cv.glmnet(x = x, y = y, 
-		family = "binomial", 
-		nfolds = nfold, 
-		type.logistic = "modified.Newton", 
-		parallel = parallel, 
-		alpha = alpha)
+	if(length(unique(y)) == 2){
+		model <- glmnet::cv.glmnet(x = x, y = y, 
+			family = "binomial", 
+			nfolds = nfold, 
+			type.logistic = "modified.Newton", 
+			parallel = parallel, 
+			alpha = alpha)
+	} else {
+		model <- glmnet::cv.glmnet(x = x, y = y, 
+			family = "gaussian", 
+			nfolds = nfold, 
+			parallel = parallel, 
+			alpha = alpha)
+	}
 
   # Find optimal penalty parameter (lambda)
 	min.cvm <- model$cvm[ which(model$lambda == model$lambda.min) ]

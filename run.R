@@ -24,4 +24,5 @@ xs <- xs[, -1]
 # Read in dataset 1
 df1 <- read.csv(paste0(wd, 'data/zy_1.csv'))
 
-z <- match_samp(x = xs, treat = df1$z, y = df1$y)
+z <- match_samp(x = xs, treat = df1$z, y = df1$y,
+	cluster = cl, parallel = T)
