@@ -27,27 +27,67 @@ match_samp <- function(x, treat, y,
 
 	x_small <- x[, trt_vars, drop = F]
 
-	# run genmatch
+	# generate covariate weights using genmatch
 	z <- Matching::GenMatch(Tr=treat, X=x_small, 
 		pop.size = pop.size,
 		max.generations = max.generations, 
 		wait.generations = wait.generations,
 		cluster = cluster)
 
-	# check balance
+	# run matching using genmatch weights
 	mgen1 <- Match(Y = y, Tr = treat, X = x_small, Weight.matrix = z)
+	
+	# matched sample
+	df <- data.frame(y = y,
+	                 treat = treat,
+	                 x = x)
+	df <- df[, unique(c(mgen1$index.treated, mgen1$index.control))]
 
 	# return matched sample
 	list(trt_vars = trt_vars,
 		out_vars = out_vars,
 		matched = z$matches,
-		bal = mgen1)
+		mout = mgen1,
+		df = df)
 
 }
 
+check_balance <- function(matched_sample, nboots = 500){
+  
+  # make formula
+  formula <- paste("treat ~", paste0(matched_sample$trt_vars, collapse = " + "))
+  formula <- as.formula(formula)
+  
+  # get balance stats
+  MatchBalance(formula, 
+               data = matched_sample$df, 
+               match.out = matched_sample$mout, 
+               nboots = nboots)
+}
+
 satt_est <- function(matched_sample){
-
-	# run gam here ... 
-
+  
+  # classify covariates as factors or continuous
+  covariates <- unique(c(matched_sample$trt_vars, matched_sample$out_vars))
+  factors <- get_factor_vars(covariates)
+  continuous <- covariates[!(factors %in% covariates)]
+  
+  # create formula
+  formula_p1 <- "y ~ treat +"
+  formula_p2 <- paste0(factors, collapse = " + ")
+  formula_p3 <- paste0("s(", paste0(continuous, collapse = ") + s("), ")")
+  formula <- paste(formula_p1, formula_p2, formula_p3)
+  
+  # fit gam
+  model <- mgcv::gam(formula,
+                     data = matched_sample$df,
+                     family = ifelse(length(unique(matched_sample$df$y)) == 2,
+                                     "binomial",
+                                     "gaussian"))
+  
+  # get satt and se
+  
 	# return satt, confidence interval
+  list(satt_nocontrol = matched_sample$mout$est,
+       se_nocontrol = matched_sample$mout$se)
 }

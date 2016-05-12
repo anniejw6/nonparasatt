@@ -25,4 +25,4 @@ xs <- xs[, -1]
 df1 <- read.csv(paste0(wd, 'data/zy_1.csv'))
 
 z <- match_samp(x = xs, treat = df1$z, y = df1$y,
-	cluster = cl, parallel = T)
+	cluster = cl, parallel = T, pop.size = 200)

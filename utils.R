@@ -37,3 +37,8 @@ pick_glmnet_var <- function(x, y,
 		))
 	return(vars_selected)
 }
+
+get_factor_vars <- function(matrix, threshold = 10) {
+  x <- apply(matrix, 2, function(x) length(unique(x)))
+  names(x)[x <= 10]
+}
