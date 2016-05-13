@@ -35,7 +35,7 @@ for (i in 1:20) {
                    y = df$y,
                    cluster = cl, 
                    parallel = T, 
-                   pop.size = 1000)
+                   pop.size = 5)
   satt_estimates <- rbind(satt_estimates, satt_est(ms))
 }
 
