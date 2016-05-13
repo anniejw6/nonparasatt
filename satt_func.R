@@ -82,14 +82,16 @@ satt_est <- function(matched){
   factors <- get_factor_vars(xs, threshold = 10)
   continuous <- covariates[!(covariates %in% factors)]
   
-  # convert factors
-  matched$df[, factors] <- apply(matched$df[, factors], 2, 
-                                        function(x) as.factor(x))
-  
   # flags
   no_factors <- length(factors) == 0
   no_continuous <- length(continuous) == 0
   no_vars <- length(factors) == 0 & length(continuous) == 0
+  
+  # convert factors
+  if (no_factors == F) {
+    matched$df[, factors] <- apply(matched$df[, factors], 2, 
+                                   function(x) as.factor(x))
+  }
   
   # create formula
   if (no_vars == T) {

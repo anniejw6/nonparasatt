@@ -1,6 +1,8 @@
 library(glmnet)
 library(Matching)
 library(parallel)
+library(doParallel)
+registerDoParallel(4)
 
 wd <- '~/projects/nonparasatt/'
 source(paste0(wd, 'utils.R'))
