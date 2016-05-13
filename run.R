@@ -29,6 +29,7 @@ satt_estimates <- data.frame(est = numeric(),
 
 # Populate satt_estimates
 for (i in 1:20) {
+  set.seed(2345)
   df <- read.csv(paste0(wd, 'data/zy_', as.character(i), '.csv'))
   ms <- match_samp(x = xs, 
                    treat = df$z, 
@@ -37,9 +38,7 @@ for (i in 1:20) {
                    parallel = T, 
                    pop.size = 5)
   satt_estimates <- rbind(satt_estimates, satt_est(ms))
+  write.csv(satt_estimates,
+            file = paste0(wd, 'submission/est.csv'),
+            row.names = F)
 }
-
-# Write CSV
-write.csv(satt_estimates,
-          file = paste0(wd, 'submission/est.csv'),
-          row.names = F)
