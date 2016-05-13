@@ -88,7 +88,7 @@ satt_est <- function(matched){
   no_vars <- length(factors) == 0 & length(continuous) == 0
   
   # convert factors
-  if (no_factors == F) {
+  if (length(factors) > 0) {
     matched$df[, factors] <- apply(matched$df[, factors], 2, 
                                    function(x) as.factor(x))
   }
