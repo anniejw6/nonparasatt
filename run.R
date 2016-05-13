@@ -1,4 +1,3 @@
-# Setup
 library(glmnet)
 library(Matching)
 library(parallel)
@@ -21,8 +20,24 @@ for(i in 1:length(xs)){
 xs <- model.matrix(~., xs)
 xs <- xs[, -1]
 
-# Read in dataset 1
-df1 <- read.csv(paste0(wd, 'data/zy_1.csv'))
+# Initialize empty set
+satt_estimates <- data.frame(est = numeric(), 
+                             ci_lower = numeric(), 
+                             ci_upper = numeric())
 
-z <- match_samp(x = xs, treat = df1$z, y = df1$y,
-	cluster = cl, parallel = T)
+# Populate satt_estimates
+for (i in 1:20) {
+  df <- read.csv(paste0(wd, 'data/zy_', as.character(i), '.csv'))
+  ms <- match_samp(x = xs, 
+                   treat = df$z, 
+                   y = df$y,
+                   cluster = cl, 
+                   parallel = T, 
+                   pop.size = 1000)
+  satt_estimates <- rbind(satt_estimates, satt_est(ms))
+}
+
+# Write CSV
+write.csv(satt_estimates,
+          file = paste0(wd, 'submission/est.csv'),
+          row.names = F)

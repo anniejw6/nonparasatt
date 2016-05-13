@@ -37,3 +37,16 @@ pick_glmnet_var <- function(x, y,
 		))
 	return(vars_selected)
 }
+
+# Returns character string of inferred factors from matrix object
+get_factor_vars <- function(matrix, threshold = 10) {
+  x <- apply(matrix, 2, function(x) length(unique(x)))
+  names(x)[x <= threshold]
+}
+
+# Identifies zero-variance columns in df
+zero_variance <- function(df) {
+  out <- lapply(df, function(x) length(unique(x)))
+  want <- which(!out > 1)
+  names(unlist(want))
+}
