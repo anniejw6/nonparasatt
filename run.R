@@ -28,6 +28,7 @@ satt_estimates <- data.frame(est = numeric(),
                              ci_upper = numeric())
 
 # Populate satt_estimates
+timestamp <- gsub(":", "", format(Sys.time(), "%Y%m%d%X%Y"))
 for (i in 1:20) {
   set.seed(2345)
   df <- read.csv(paste0(wd, 'data/zy_', as.character(i), '.csv'))
@@ -36,9 +37,9 @@ for (i in 1:20) {
                    y = df$y,
                    cluster = cl, 
                    parallel = T, 
-                   pop.size = 5)
+                   pop.size = 1000)
   satt_estimates <- rbind(satt_estimates, satt_est(ms))
   write.csv(satt_estimates,
-            file = paste0(wd, 'submission/est.csv'),
+            file = paste0(wd, 'submission/est_', timestamp, '.csv'),
             row.names = F)
 }
