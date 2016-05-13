@@ -9,7 +9,7 @@ source(paste0(wd, 'utils.R'))
 source(paste0(wd, 'satt_func.R'))
 
 # Parallel cores
-cl <- parallel::makeCluster(detectCores() - 1)
+cl <- parallel::makeCluster(15)
 
 # Clean covariates
 xs <- read.csv(paste0(wd, 'data/x.csv'))
