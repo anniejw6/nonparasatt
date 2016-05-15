@@ -1,0 +1,9 @@
+The estimated runtime below is calculated from R’s system.time() function. We
+used an Amazon EC2 cluster and parallelized computation over 15 cores.
+
+"Type of Time","Time (seconds)"
+"user.self",787.584
+"sys.self",688.656
+"elapsed",4342.85
+"user.child",206.328
+"sys.child",20.712

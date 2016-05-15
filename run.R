@@ -2,14 +2,14 @@ library(glmnet)
 library(Matching)
 library(parallel)
 library(doParallel)
-registerDoParallel(4)
+registerDoParallel(15)
 
 wd <- '~/projects/nonparasatt/'
 source(paste0(wd, 'utils.R'))
 source(paste0(wd, 'satt_func.R'))
 
 # Parallel cores
-cl <- parallel::makeCluster(detectCores() - 1)
+cl <- parallel::makeCluster(15)
 
 # Clean covariates
 xs <- read.csv(paste0(wd, 'data/x.csv'))
@@ -28,7 +28,9 @@ satt_estimates <- data.frame(est = numeric(),
                              ci_upper = numeric())
 
 # Populate satt_estimates
+timestamp <- gsub(":", "", format(Sys.time(), "%Y%m%d%X%Y"))
 for (i in 1:20) {
+  set.seed(2345)
   df <- read.csv(paste0(wd, 'data/zy_', as.character(i), '.csv'))
   ms <- match_samp(x = xs, 
                    treat = df$z, 
@@ -37,9 +39,7 @@ for (i in 1:20) {
                    parallel = T, 
                    pop.size = 1000)
   satt_estimates <- rbind(satt_estimates, satt_est(ms))
+  write.csv(satt_estimates,
+            file = paste0(wd, 'submission/est_', timestamp, '.csv'),
+            row.names = F)
 }
-
-# Write CSV
-write.csv(satt_estimates,
-          file = paste0(wd, 'submission/est.csv'),
-          row.names = F)
