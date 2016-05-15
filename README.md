@@ -1,6 +1,6 @@
 # non-parametric SATT estimation
 
-This is an entry in the [causal inference challenge](https://docs.google.com/document/d/1p5xdeJVY5GdBC2ar_3wVjaboph0PemXulnMD5OojOCI/edit) for the 
+This is an entry (with [Leo Liu](https://github.com/leonidliu)) in the [causal inference challenge](https://docs.google.com/document/d/1p5xdeJVY5GdBC2ar_3wVjaboph0PemXulnMD5OojOCI/edit) for the 
 2016 atlantic causal inference conference.
 
 Our method is intended to calculate the SATT in an automatic and
